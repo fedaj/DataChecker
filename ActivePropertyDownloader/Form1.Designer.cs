@@ -1,4 +1,4 @@
-﻿namespace ActivePropertyDownloader
+﻿namespace DataChecker
 {
     partial class Form1
     {

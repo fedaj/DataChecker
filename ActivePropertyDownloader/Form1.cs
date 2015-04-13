@@ -14,7 +14,7 @@ using System.Threading;
 using System.Collections.Concurrent;
 using System.IO;
 
-namespace ActivePropertyDownloader
+namespace DataChecker
 {
     public partial class Form1 : Form
     {

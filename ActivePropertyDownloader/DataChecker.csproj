@@ -7,7 +7,7 @@
     <ProjectGuid>{5DE904EC-F670-4BE3-81CE-3E42FB67B36C}</ProjectGuid>
     <OutputType>WinExe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>ActivePropertyDownloader</RootNamespace>
+    <RootNamespace>DataChecker</RootNamespace>
     <AssemblyName>ActivePropertyDownloader</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
@@ -94,8 +94,9 @@
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
+      <DesignTime>True</DesignTime>
     </Compile>
-    <None Include="ActivePropertyDownloader_TemporaryKey.pfx" />
+    <None Include="DataChecker_TemporaryKey.pfx" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
