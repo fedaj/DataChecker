@@ -53,6 +53,9 @@ namespace ActivePropertyDownloader
         public string CountryCode { get; set; }
         public string CountryISOCode { get; set; }
         public string CountryName { get; set; }
+        public string Map { get; set; }
+        public string MapStatus { get; set; }
+        public int NumberOfImages { get; set; }
 
     }
 

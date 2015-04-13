@@ -479,6 +479,9 @@ namespace ActivePropertyDownloader
                                              Hotel.CountryCode = "";
                                              Hotel.CountryISOCode = "";
                                              Hotel.CountryName = "";
+                                             Hotel.Map = "";
+                                             Hotel.MapStatus = "";
+                                             Hotel.NumberOfImages = 0;
 
                                              //Now we check the XPath's one by one and we'll update the hotel object and wham bam thank you ma'm.
 
@@ -588,6 +591,40 @@ namespace ActivePropertyDownloader
                                                  Hotel.Longitude = h.SelectSingleNode(".//Longitude").InnerText;
                                              }
 
+                                             //Map
+                                             if (h.SelectSingleNode(".//MapPageLink") != null)
+                                             {
+
+                                                 Hotel.Map = h.SelectSingleNode(".//MapPageLink").InnerText;
+                                                 //Check if the map can really be accesed
+                                                 HttpWebRequest request = (HttpWebRequest)WebRequest.Create(Hotel.Map);
+                                                 request.Method = "HEAD";
+                                                 try
+                                                 {
+                                                     HttpWebResponse response = (HttpWebResponse)request.GetResponse();
+                                                     if (response == null)
+                                                     {
+                                                         Hotel.MapStatus = "No response";
+                                                     }
+                                                     else
+                                                     {
+                                                         Hotel.MapStatus = response.StatusCode.ToString();
+                                                         response.Close();
+                                                     }
+                                                 }
+                                                 catch(Exception ex)
+                                                 {
+                                                     status.Status = String.Format("Error trying to access map link {0}, exception {1}", Hotel.Map, ex.Message);
+                                                     worker.ReportProgress(status.CountryValue, status);
+                                                     Hotel.MapStatus = "Error retrieving map";
+                                                 }
+                                             }
+
+                                             //Retrieve number of images
+                                             if (h.SelectSingleNode(".//ImageLink") != null)
+                                             {
+                                                 Hotel.NumberOfImages = h.SelectNodes(".//ImageLink").Count;
+                                             }
 
                                              Hotel.CityCode = city.Attributes["Code"].Value;
                                              Hotel.CityName = city.InnerText;
@@ -647,6 +684,7 @@ namespace ActivePropertyDownloader
                     dedupe.Add(h1);
             }*/
 
+            //TODO: Calculate average distance of each hotel to the rest on the same distance
 
 
             //Time to write to the file, Apparently we've somehow survived!
@@ -659,7 +697,7 @@ namespace ActivePropertyDownloader
             using (var writer = new StreamWriter(FileLocation))
             {
 
-                writer.WriteLine("Hotel Code,Hotel Name,Item Code,Location,Address Line 1,Address Line 2,Address Line 3,Address LIne 4,Telephone,Fax,Email,Website,Star Rating,Category,Latitude,Longitude,City Code,City Name,Country Code,Country ISO Code,Country Name");
+                writer.WriteLine("Hotel Code,Hotel Name,Item Code,Location,Address Line 1,Address Line 2,Address Line 3,Address LIne 4,Telephone,Fax,Email,Website,Star Rating,Category,Latitude,Longitude,City Code,City Name,Country Code,Country ISO Code,Country Name,Map,Map Status,Number of Images");
 
                 foreach (var h in OrderedHotels)
                 {
@@ -684,7 +722,10 @@ namespace ActivePropertyDownloader
                     writer.Write("\"" + h.CityName.Replace("\"", "") + "\",");
                     writer.Write("\"" + h.CountryCode.Replace("\"", "") + "\",");
                     writer.Write("\"" + h.CountryISOCode.Replace("\"", "") + "\",");
-                    writer.Write("\"" + h.CountryName.Replace("\"", "") + "\"");
+                    writer.Write("\"" + h.CountryName.Replace("\"", "") + "\",");
+                    writer.Write("\"" + h.Map.Replace("\"", "") + "\",");
+                    writer.Write("\"" + h.MapStatus.Replace("\"", "") + "\",");
+                    writer.Write("\"" + h.NumberOfImages.ToString() + "\"");
                     writer.WriteLine();
 
                 }
